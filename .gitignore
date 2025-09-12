@@ -1,0 +1,31 @@
+# Binaries (二進位檔)
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Go coverage files (測試覆蓋率檔案)
+*.cover
+*.cov
+coverage.out
+
+# Logs (日誌檔)
+*.log
+
+# OS files (作業系統自動產生檔案)
+.DS_Store
+Thumbs.db
+
+# IDE / Editor settings (編輯器設定)
+.vscode/
+.idea/
+
+# Dependency folders (依賴模組暫存)
+vendor/
+
+# Environment & config (環境變數與設定)
+.env
+.env.*
