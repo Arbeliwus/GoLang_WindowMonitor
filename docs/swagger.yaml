@@ -1,0 +1,35 @@
+basePath: /
+host: localhost:8080
+info:
+  contact: {}
+  description: 裝置/房間狀態管理 API（devices/rooms state management api）
+  title: Smart Home API (smart home api)
+  version: "1.0"
+paths:
+  /ping:
+    get:
+      description: 回傳 pong（return pong）
+      responses:
+        "200":
+          description: pong
+          schema:
+            type: string
+      summary: Ping 測試（ping test）
+      tags:
+      - health
+  /rooms:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              additionalProperties: true
+              type: object
+            type: array
+      summary: 列出所有房間（list all rooms）
+      tags:
+      - rooms
+swagger: "2.0"

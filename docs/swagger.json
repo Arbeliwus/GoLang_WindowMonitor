@@ -1,0 +1,53 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "裝置/房間狀態管理 API（devices/rooms state management api）",
+        "title": "Smart Home API (smart home api)",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "paths": {
+        "/ping": {
+            "get": {
+                "description": "回傳 pong（return pong）",
+                "tags": [
+                    "health"
+                ],
+                "summary": "Ping 測試（ping test）",
+                "responses": {
+                    "200": {
+                        "description": "pong",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/rooms": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "rooms"
+                ],
+                "summary": "列出所有房間（list all rooms）",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "additionalProperties": true
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
