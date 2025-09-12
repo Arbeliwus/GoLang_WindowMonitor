@@ -29,3 +29,4 @@ vendor/
 # Environment & config (環境變數與設定)
 .env
 .env.*
+!*.example
