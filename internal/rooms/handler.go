@@ -3,6 +3,7 @@ package rooms
 import (
 	"database/sql"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -81,12 +82,12 @@ func GetDeviceStates(db *sql.DB) gin.HandlerFunc {
 		var result []map[string]any
 		for rows.Next() {
 			var (
-				roomID   int
-				roomName string
-				deviceID int
+				roomID     int
+				roomName   string
+				deviceID   int
 				deviceName string
-				isOn sql.NullBool
-				lastEvent sql.NullTime
+				isOn       sql.NullBool
+				lastEvent  sql.NullTime
 			)
 			if err := rows.Scan(&roomID, &roomName, &deviceID, &deviceName, &isOn, &lastEvent); err != nil {
 				c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -103,5 +104,46 @@ func GetDeviceStates(db *sql.DB) gin.HandlerFunc {
 		}
 
 		c.JSON(http.StatusOK, result)
+	}
+}
+
+// ChangeDeviceState（改變裝置狀態 change device state）
+// @Summary 改變裝置狀態（change device state）
+// @Description 新增一筆 on/off 事件，並同步裝置當前狀態（create on/off event and sync device state）
+// @Tags devices
+// @Accept json
+// @Produce json
+// @Param id path int true "裝置 id（device id）"
+// @Param payload body rooms.ChangeDeviceStateReq true "請求內容（payload）"
+// @Success 200 "no content"
+// @Failure 400 {object} map[string]any
+// @Failure 409 {object} map[string]any "控制被拒（例如總電閘關閉 control gate off）"
+// @Failure 500 {object} map[string]any
+// @Router /devices/{id}/state [post]
+func ChangeDeviceState(db *sql.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		idStr := c.Param("id")
+		deviceID, err := strconv.Atoi(idStr)
+		if err != nil || deviceID <= 0 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid device id"})
+			return
+		}
+
+		var req ChangeDeviceStateReq
+		if err := c.ShouldBindJSON(&req); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		// 呼叫儲存程序（call procedure）
+		_, execErr := db.Exec(`call public.apply_device_event($1, $2, $3)`,
+			deviceID, req.IsOn, req.Note)
+
+		if execErr != nil {
+			c.JSON(http.StatusConflict, gin.H{"error": execErr.Error()})
+			return
+		}
+
+		c.Status(http.StatusNoContent)
 	}
 }

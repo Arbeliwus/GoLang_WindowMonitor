@@ -17,18 +17,12 @@ import (
 func New(db *sql.DB) *gin.Engine {
 	r := gin.Default()
 
-	// health（健康檢查 health check）
 	r.GET("/ping", health.Ping)
-
-	// rooms（房間 rooms）
 	r.GET("/rooms", rooms.List(db))
-
-	// 房間 + 裝置狀態
 	r.GET("/rooms/devices/state", rooms.GetDeviceStates(db))
-
-
-	// swagger ui（swagger ui）
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+
+	r.POST("/devices/:id/state", rooms.ChangeDeviceState(db))
 
 	// 可加一個根路由提示（optional）
 	r.GET("/", func(c *gin.Context) {

@@ -15,6 +15,65 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/devices/{id}/state": {
+            "post": {
+                "description": "新增一筆 on/off 事件，並同步裝置當前狀態（create on/off event and sync device state）",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "devices"
+                ],
+                "summary": "改變裝置狀態（change device state）",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "裝置 id（device id）",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "請求內容（payload）",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/rooms.ChangeDeviceStateReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "no content"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "409": {
+                        "description": "控制被拒（例如總電閘關閉 control gate off）",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
         "/ping": {
             "get": {
                 "description": "回傳 pong（return pong）",
@@ -89,6 +148,22 @@ const docTemplate = `{
                             }
                         }
                     }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "rooms.ChangeDeviceStateReq": {
+            "type": "object",
+            "required": [
+                "is_on"
+            ],
+            "properties": {
+                "is_on": {
+                    "type": "boolean"
+                },
+                "note": {
+                    "type": "string"
                 }
             }
         }

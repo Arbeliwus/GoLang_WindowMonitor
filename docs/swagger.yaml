@@ -1,4 +1,14 @@
 basePath: /
+definitions:
+  rooms.ChangeDeviceStateReq:
+    properties:
+      is_on:
+        type: boolean
+      note:
+        type: string
+    required:
+    - is_on
+    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -6,6 +16,46 @@ info:
   title: Smart Home API (smart home api)
   version: "1.0"
 paths:
+  /devices/{id}/state:
+    post:
+      consumes:
+      - application/json
+      description: 新增一筆 on/off 事件，並同步裝置當前狀態（create on/off event and sync device state）
+      parameters:
+      - description: 裝置 id（device id）
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 請求內容（payload）
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/rooms.ChangeDeviceStateReq'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: no content
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "409":
+          description: 控制被拒（例如總電閘關閉 control gate off）
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 改變裝置狀態（change device state）
+      tags:
+      - devices
   /ping:
     get:
       description: 回傳 pong（return pong）
