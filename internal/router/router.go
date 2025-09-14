@@ -12,11 +12,14 @@ import (
 
 	"iot-api/internal/controlGate"
 	"iot-api/internal/health"
+	"iot-api/internal/middleware"
 	"iot-api/internal/rooms"
 )
 
 func New(db *sql.DB) *gin.Engine {
 	r := gin.Default()
+	// 🔹 掛載錯誤集中 log middleware
+	r.Use(middleware.ErrorLoggerMiddleware())
 
 	r.GET("/ping", health.Ping)
 	r.GET("/rooms", rooms.List(db))

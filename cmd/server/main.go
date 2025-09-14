@@ -6,6 +6,7 @@ import (
 	cfgpkg "iot-api/internal/config" // 避免與內部變數同名，取別名（alias）
 	dbpkg "iot-api/internal/db"
 	"iot-api/internal/router"
+	"iot-api/internal/logger"
 )
 
 // @title Smart Home API (smart home api)
@@ -14,7 +15,10 @@ import (
 // @host localhost:8080
 // @BasePath /
 func main() {
+	
+	logger.Init()
 	cfg := cfgpkg.Load()
+	
 
 	pool, err := dbpkg.Open(cfg.DSN)
 	if err != nil {
