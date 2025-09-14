@@ -15,6 +15,66 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/control-gate": {
+            "get": {
+                "description": "回傳 保全狀態",
+                "tags": [
+                    "controlGate"
+                ],
+                "summary": "取得保全狀態",
+                "responses": {
+                    "200": {
+                        "description": "no content"
+                    }
+                }
+            },
+            "post": {
+                "description": "更新保全狀態",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "controlGate"
+                ],
+                "summary": "更新保全狀態(上班/下班)",
+                "parameters": [
+                    {
+                        "description": "更新請求",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controlGate.ControlGateUpdateReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controlGate.ControlGateResp"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
         "/devices/{id}/state": {
             "post": {
                 "description": "新增一筆 on/off 事件，並同步裝置當前狀態（create on/off event and sync device state）",
@@ -47,7 +107,7 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "204": {
+                    "200": {
                         "description": "no content"
                     },
                     "400": {
@@ -153,6 +213,28 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "controlGate.ControlGateResp": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "controlGate.ControlGateUpdateReq": {
+            "type": "object",
+            "required": [
+                "enabled"
+            ],
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                }
+            }
+        },
         "rooms.ChangeDeviceStateReq": {
             "type": "object",
             "required": [

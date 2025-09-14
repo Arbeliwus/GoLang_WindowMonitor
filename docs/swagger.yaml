@@ -1,5 +1,19 @@
 basePath: /
 definitions:
+  controlGate.ControlGateResp:
+    properties:
+      enabled:
+        type: boolean
+      updated_at:
+        type: string
+    type: object
+  controlGate.ControlGateUpdateReq:
+    properties:
+      enabled:
+        type: boolean
+    required:
+    - enabled
+    type: object
   rooms.ChangeDeviceStateReq:
     properties:
       is_on:
@@ -16,6 +30,46 @@ info:
   title: Smart Home API (smart home api)
   version: "1.0"
 paths:
+  /control-gate:
+    get:
+      description: 回傳 保全狀態
+      responses:
+        "200":
+          description: no content
+      summary: 取得保全狀態
+      tags:
+      - controlGate
+    post:
+      consumes:
+      - application/json
+      description: 更新保全狀態
+      parameters:
+      - description: 更新請求
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controlGate.ControlGateUpdateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controlGate.ControlGateResp'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: 更新保全狀態(上班/下班)
+      tags:
+      - controlGate
   /devices/{id}/state:
     post:
       consumes:
@@ -36,7 +90,7 @@ paths:
       produces:
       - application/json
       responses:
-        "204":
+        "200":
           description: no content
         "400":
           description: Bad Request
