@@ -24,7 +24,7 @@ func Load() Config {
 		host := getenv("DB_HOST", "127.0.0.1")
 		port := getenv("DB_PORT", "5432")
 		name := getenv("DB_NAME", "iot_evergrain")
-		ssl  := getenv("DB_SSLMODE", "disable") 
+		ssl := getenv("DB_SSLMODE", "disable")
 
 		if pass == "" {
 			log.Fatal("missing DB_PASS (database password)")
@@ -37,9 +37,8 @@ func Load() Config {
 		)
 	}
 
-
 	return Config{
-		HTTPAddr: getenv("HTTP_ADDR", ":8080"),
+		HTTPAddr: getenv("HTTP_ADDR", ":8100"),
 		DSN:      dsn,
 	}
 }

@@ -23,6 +23,10 @@ func New(db *sql.DB) *gin.Engine {
 	// rooms（房間 rooms）
 	r.GET("/rooms", rooms.List(db))
 
+	// 房間 + 裝置狀態
+	r.GET("/rooms/devices/state", rooms.GetDeviceStates(db))
+
+
 	// swagger ui（swagger ui）
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 

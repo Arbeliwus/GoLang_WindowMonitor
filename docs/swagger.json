@@ -48,6 +48,43 @@
                     }
                 }
             }
+        },
+        "/rooms/devices/state": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "rooms"
+                ],
+                "summary": "查詢房間內裝置狀態",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "房間名稱 (room name)",
+                        "name": "room_name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "房間 IDs (逗號分隔)",
+                        "name": "ids",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "additionalProperties": true
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

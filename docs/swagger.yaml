@@ -32,4 +32,28 @@ paths:
       summary: 列出所有房間（list all rooms）
       tags:
       - rooms
+  /rooms/devices/state:
+    get:
+      parameters:
+      - description: 房間名稱 (room name)
+        in: query
+        name: room_name
+        type: string
+      - description: 房間 IDs (逗號分隔)
+        in: query
+        name: ids
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              additionalProperties: true
+              type: object
+            type: array
+      summary: 查詢房間內裝置狀態
+      tags:
+      - rooms
 swagger: "2.0"
