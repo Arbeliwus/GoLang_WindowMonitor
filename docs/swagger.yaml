@@ -14,6 +14,23 @@ definitions:
     required:
     - enabled
     type: object
+  event.EventResp:
+    properties:
+      device_id:
+        type: integer
+      device_name:
+        type: string
+      event_id:
+        type: integer
+      event_timestamp:
+        type: string
+      is_open:
+        type: boolean
+      room_id:
+        type: integer
+      room_name:
+        type: string
+    type: object
   rooms.ChangeDeviceStateReq:
     properties:
       is_on:
@@ -110,6 +127,34 @@ paths:
       summary: 改變裝置狀態（change device state）
       tags:
       - devices
+  /events:
+    get:
+      description: 可以依時間區間和房間過濾
+      parameters:
+      - description: 開始時間 (RFC3339 格式)
+        in: query
+        name: start
+        type: string
+      - description: 結束時間 (RFC3339 格式)
+        in: query
+        name: end
+        type: string
+      - description: 房間 ID
+        in: query
+        name: room_id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/event.EventResp'
+            type: array
+      summary: 查詢事件
+      tags:
+      - events
   /ping:
     get:
       description: 回傳 pong（return pong）
